@@ -1,0 +1,46 @@
+# Dependencies
+node_modules/
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+
+# Credentials & keys
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+secrets.json
+*.credentials
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor / local tooling
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Build output (if added later)
+dist/
+build/
+out/
+.cache/
+
+# Generated screenshots
+temporary screenshots/
+
+# Puppeteer browser cache (local installs)
+.puppeteer/

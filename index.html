@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Synapse — Your Intelligent Creative Agency</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cream: '#F4EFE9',
+            orange: '#FC5100',
+            blue: '#0501DE',
+            taupe: '#C0B6AC',
+            charcoal: '#1A1A1A',
+            grey: '#4F4F4E',
+          },
+          fontFamily: {
+            display: ['"Bebas Neue"', 'sans-serif'],
+            body: ['Mulish', 'sans-serif'],
+          },
+          spacing: {
+            'nav': '4.5rem',
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Mulish:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { font-size: 16px; }
+    body {
+      font-family: 'Mulish', sans-serif;
+      background: #F4EFE9;
+      color: #1A1A1A;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    .display {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(4.5rem, 14vw, 14rem);
+      line-height: 0.85;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+    }
+    .h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem, 5vw, 5.625rem); line-height: 0.95; letter-spacing: -0.02em; text-transform: uppercase; }
+    .h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(1.75rem, 4vw, 3.5rem); line-height: 1; letter-spacing: -0.01em; text-transform: uppercase; }
+    .h3 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(1.125rem, 2vw, 1.5rem); letter-spacing: 0.05em; text-transform: uppercase; }
+    .h4 { font-family: 'Bebas Neue', sans-serif; font-size: 1.125rem; letter-spacing: 0.04em; text-transform: uppercase; }
+    .body-text { font-size: 1.125rem; line-height: 1.7; }
+    .small-body { font-size: 0.875rem; line-height: 1.5; }
+
+    .grain::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9998;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    #loader {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      background: #F4EFE9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.5s ease;
+    }
+    .loader-hex {
+      width: 80px;
+      height: 92px;
+      animation: pulse-hex 1.2s ease-in-out infinite;
+    }
+    @keyframes pulse-hex {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(0.92); opacity: 0.6; }
+    }
+
+    .spin-slow { animation: spin 10s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .nav-pill {
+      border-radius: 30px;
+      padding: 0.5rem 1.25rem;
+      font-weight: 500;
+      transition: background-color 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.25s ease, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .nav-pill:hover { transform: translateY(-1px); }
+    .nav-pill:focus-visible { outline: 2px solid #0501DE; outline-offset: 3px; }
+
+    .cta-blob {
+      transition: transform 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .cta-blob-wrap:hover .cta-blob { transform: scale(1.05) rotate(45deg); }
+    .cta-blob-wrap:active .cta-blob { transform: scale(0.97) rotate(20deg); }
+    .cta-blob-wrap:focus-visible { outline: 2px solid #F4EFE9; outline-offset: 4px; border-radius: 50%; }
+
+    .btn-primary {
+      background: #FC5100;
+      color: #0501DE;
+      padding: 0.875rem 2rem;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.125rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: background-color 0.25s ease, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+      box-shadow: 0 4px 24px rgba(252, 81, 0, 0.2), 0 1px 4px rgba(5, 1, 222, 0.08);
+    }
+    .btn-primary:hover { background: #e04800; transform: translateY(-2px); box-shadow: 0 8px 32px rgba(252, 81, 0, 0.3); }
+    .btn-primary:active { transform: translateY(0); }
+    .btn-primary:focus-visible { outline: 2px solid #0501DE; outline-offset: 3px; }
+
+    .btn-secondary {
+      background: #0501DE;
+      color: #F4EFE9;
+      padding: 0.875rem 2rem;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.125rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: background-color 0.25s ease, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .btn-secondary:hover { background: #0400b8; transform: translateY(-2px); }
+    .btn-secondary:active { transform: translateY(0); }
+    .btn-secondary:focus-visible { outline: 2px solid #FC5100; outline-offset: 3px; }
+
+    .service-item { border-bottom: 1px solid rgba(26,26,26,0.12); }
+    .service-trigger {
+      transition: color 0.2s ease;
+    }
+    .service-trigger:hover { color: #FC5100; }
+    .service-trigger:focus-visible { outline: 2px solid #0501DE; outline-offset: 2px; }
+    .service-panel {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .service-item.open .service-panel { max-height: 400px; }
+    .service-item.open .service-icon { transform: rotate(45deg); }
+    .service-icon { transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+    .work-item {
+      border-bottom: 1px solid rgba(244,239,233,0.15);
+      transition: background-color 0.3s ease;
+    }
+    .work-item:hover { background: rgba(252,81,0,0.08); }
+    .work-item:focus-visible { outline: 2px solid #FC5100; outline-offset: -2px; }
+
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: marquee 40s linear infinite;
+    }
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .about-word {
+      display: inline;
+      transition: color 0.3s ease;
+      color: #C0B6AC;
+    }
+    .about-word.active { color: #1A1A1A; }
+
+    .blog-card {
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease;
+      box-shadow: 0 2px 16px rgba(5,1,222,0.06), 0 8px 32px rgba(26,26,26,0.04);
+    }
+    .blog-card:hover { transform: translateY(-6px); box-shadow: 0 8px 32px rgba(5,1,222,0.1), 0 16px 48px rgba(26,26,26,0.08); }
+    .blog-card:focus-visible { outline: 2px solid #0501DE; outline-offset: 3px; }
+    .blog-card img { transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .blog-card:hover img { transform: scale(1.04); }
+
+    #dotted-surface {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    #dotted-surface canvas {
+      display: block;
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    .manifesto-text-path {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3rem, 8vw, 6.25rem);
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    .mobile-menu {
+      transform: translateX(100%);
+      transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .mobile-menu.open { transform: translateX(0); }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, .marquee-track, .spin-slow { animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body class="grain">
+
+  <!-- Loader -->
+  <div id="loader" aria-hidden="true">
+    <svg class="loader-hex" viewBox="0 0 126.1 145.6" xmlns="http://www.w3.org/2000/svg">
+      <path fill="#FC5100" d="M63.1,0L0,36.4v72.8l63.1,36.4l63.1-36.4V36.4L63.1,0z"/>
+    </svg>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="mobile-menu fixed inset-0 z-[60] bg-blue flex flex-col justify-center items-center gap-6 md:hidden" role="dialog" aria-modal="true" aria-label="Mobile navigation">
+    <button id="mobile-menu-close" class="absolute top-5 right-4 size-10 flex items-center justify-center text-cream focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange" aria-label="Close menu">
+      <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <a href="#about" class="h2 text-cream mobile-nav-link">About</a>
+    <a href="#insights" class="h2 text-cream mobile-nav-link">Insights</a>
+    <a href="#work" class="h2 text-cream mobile-nav-link">Work</a>
+    <a href="#contact" class="h2 text-cream mobile-nav-link">Contact</a>
+  </div>
+
+  <main>
+    <!-- Hero -->
+    <section class="relative bg-orange text-cream min-h-svh flex flex-col overflow-hidden" id="hero">
+      <div id="dotted-surface" aria-hidden="true"></div>
+
+      <header class="relative z-10 shrink-0">
+        <nav class="flex h-nav items-center justify-between px-4 md:px-5 border-b border-cream/20" aria-label="Main navigation">
+          <a href="#" class="flex items-center gap-3 shrink-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cream" aria-label="Synapse home">
+            <img src="brand_assets/logo_white.svg" alt="" class="h-8 w-auto" width="35" height="40">
+            <span class="font-display text-cream text-xl tracking-wide hidden sm:block">synapse</span>
+          </a>
+
+          <div class="hidden md:flex items-center gap-0 relative">
+            <button id="nav-toggle" class="absolute -left-10 top-1/2 -translate-y-1/2 z-10 flex size-9 items-center justify-center rounded-full bg-cream text-orange focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue" aria-label="Toggle navigation" aria-expanded="false">
+              <svg class="size-2.5" viewBox="0 0 11 11" fill="currentColor"><path d="M10.87 5.9H6.51v4.35H5.06V5.9H.7V4.45H5.06V.09h1.45v4.36h4.36v1.45z"/></svg>
+            </button>
+            <ul id="nav-links" class="flex items-center gap-1">
+              <li><a href="#about" class="nav-pill small-body bg-cream text-grey">About</a></li>
+              <li><a href="#insights" class="nav-pill small-body bg-cream text-grey">Insights</a></li>
+              <li><a href="#work" class="nav-pill small-body bg-cream text-grey">Work</a></li>
+              <li><a href="#contact" class="nav-pill small-body bg-cream text-grey">Contact</a></li>
+            </ul>
+          </div>
+
+          <button id="mobile-menu-btn" class="flex md:hidden size-8 items-center justify-center rounded-full bg-cream text-orange focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue" aria-label="Open menu" aria-expanded="false">
+            <svg class="size-2.5" viewBox="0 0 11 11" fill="currentColor"><path d="M10.87 5.9H6.51v4.35H5.06V5.9H.7V4.45H5.06V.09h1.45v4.36h4.36v1.45z"/></svg>
+          </button>
+        </nav>
+        <p class="small-body text-cream font-bold px-4 md:px-5 py-4 max-w-[9.5rem] leading-tight hidden md:block">Built different.<br>Powered by AI.</p>
+      </header>
+
+      <div class="relative z-10 flex flex-col w-full flex-1 justify-end px-4 md:px-5 pb-4 md:pb-5">
+        <h1 class="display flex flex-col">
+          <span>Your</span>
+          <span class="inline-block overflow-hidden">
+            <span id="hero-word" class="inline-block">intelligent</span>
+          </span>
+        </h1>
+        <div class="flex flex-col md:flex-row md:items-center gap-4 md:gap-5">
+          <h1 class="display">agency</h1>
+          <div class="flex items-center gap-5">
+            <svg class="size-20 md:size-28 text-blue spin-slow shrink-0" viewBox="0 0 118 119" fill="currentColor" aria-hidden="true">
+              <path d="M0 70.24H33.82L9.91 94.16l14.67 14.68 23.92-23.92v33.84h20.74V84.92l23.92 23.92 14.67-14.68-23.91-23.92H117.73V49.49H83.91l23.92-23.92L93.16 10.89 69.24 34.81V.98H48.5v33.83L24.58 10.89 9.91 25.57l23.91 23.92H0v20.75z"/>
+            </svg>
+            <a href="#contact" class="cta-blob-wrap relative inline-flex aspect-square min-h-28 min-w-28 items-center justify-center text-blue" aria-label="Let's connect">
+              <svg class="cta-blob absolute inset-0 w-full h-full" viewBox="0 0 125 125" fill="currentColor" aria-hidden="true">
+                <path d="M11.46 83.93C9.92 102.54 22.97 115.6 41.58 114.06 53.65 128.31 72.11 128.31 84.19 114.06 102.8 115.6 115.85 102.54 114.32 83.93 128.56 71.85 128.56 53.39 114.32 41.31 115.85 22.69 102.8 9.63 84.19 11.17 72.12-3.08 53.66-3.08 41.58 11.17 22.97 9.63 9.92 22.69 11.46 41.31-2.79 53.38-2.79 71.85 11.46 83.93z"/>
+              </svg>
+              <span class="h4 text-cream z-10 text-center px-4">Let's connect</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Manifesto -->
+    <section class="relative h-[400vh] md:h-[500vh]" id="manifesto" aria-label="Our manifesto">
+      <div class="sticky top-0 h-screen w-full bg-blue text-cream flex items-center overflow-hidden">
+        <div class="absolute top-0 left-0 flex items-center gap-1 p-4 md:p-5 z-10">
+          <svg class="size-6 spin-slow text-cream" viewBox="0 0 25 25" fill="currentColor" aria-hidden="true">
+            <path d="M13.64 16.13C17.34 27.52 7.47 27.52 11.17 16.13 7.47 27.52-.51 21.72 9.18 14.68-.51 21.72-3.56 12.34 8.41 12.34-3.56 12.34-.51 2.95 9.18 9.99-.51 2.95 7.47-2.85 11.17 8.54 7.47-2.85 17.34-2.85 13.64 8.54 17.34-2.85 25.32 2.95 15.63 9.99 25.32 2.95 28.36 12.34 16.39 12.34 28.36 12.34 25.32 21.72 15.63 14.68 25.32 21.72 17.34 27.52 13.64 16.13z"/>
+          </svg>
+          <p class="h3">Our manifesto</p>
+        </div>
+        <div class="absolute inset-0 flex flex-col items-center justify-center overflow-hidden">
+          <div id="curve-wrap" class="absolute top-1/2 left-1/2 w-[200%] md:w-full -translate-x-1/2 -translate-y-1/2 z-[1]">
+            <svg class="w-full h-auto" viewBox="0 0 1441 259" aria-hidden="true">
+              <defs>
+                <path id="curve-path" d="M0.34 163.94C224.22 39.56 496.45 39.56 720.34 163.94c223.88 124.38 496.11 124.38 720 0" fill="none"/>
+              </defs>
+              <text>
+                <textPath id="curve-text" href="#curve-path" class="manifesto-text-path" fill="currentColor" startOffset="-5%">The intelligence behind brand evolution</textPath>
+              </text>
+            </svg>
+          </div>
+          <h2 id="manifesto-body" class="h1 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-5xl px-4 md:px-5 text-center uppercase opacity-0 z-[2] pointer-events-none">
+            We fuse artificial intelligence, creative strategy, and human insight to help brands connect deeper — and turn that connection into measurable growth.
+          </h2>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services -->
+    <section class="px-4 md:px-5 py-8 md:py-16" id="services" aria-label="Services">
+      <div class="flex items-center gap-1 mb-8">
+        <svg class="size-6 spin-slow text-charcoal" viewBox="0 0 25 25" fill="currentColor" aria-hidden="true">
+          <path d="M13.64 16.13C17.34 27.52 7.47 27.52 11.17 16.13 7.47 27.52-.51 21.72 9.18 14.68-.51 21.72-3.56 12.34 8.41 12.34-3.56 12.34-.51 2.95 9.18 9.99-.51 2.95 7.47-2.85 11.17 8.54 7.47-2.85 17.34-2.85 13.64 8.54 17.34-2.85 25.32 2.95 15.63 9.99 25.32 2.95 28.36 12.34 16.39 12.34 28.36 12.34 25.32 21.72 15.63 14.68 25.32 21.72 17.34 27.52 13.64 16.13z"/>
+        </svg>
+        <p class="h3 text-charcoal">Services</p>
+      </div>
+
+      <div id="services-wrap" class="max-w-5xl mx-auto flex flex-col lg:flex-row gap-10 lg:gap-16 opacity-0">
+        <div class="flex-1" role="list">
+          <div class="service-item open" role="listitem">
+            <button class="service-trigger w-full flex items-center justify-between py-6 md:py-8 text-left" aria-expanded="true">
+              <h2 class="h2 text-charcoal">AI Strategy &amp; Growth</h2>
+              <svg class="service-icon size-4 text-orange shrink-0 ml-4" viewBox="0 0 11 11" fill="currentColor" aria-hidden="true"><path d="M10.87 5.9H6.51v4.35H5.06V5.9H.7V4.45H5.06V.09h1.45v4.36h4.36v1.45z"/></svg>
+            </button>
+            <div class="service-panel">
+              <p class="body-text text-grey pb-6 md:pb-8 max-w-lg">We deploy, measure, and optimize AI systems to ensure lasting competitive advantage.</p>
+              <ul class="flex flex-wrap gap-2 pb-8">
+                <li class="small-body bg-cream border border-taupe/40 px-4 py-2 text-charcoal">AI roadmap &amp; strategy</li>
+                <li class="small-body bg-cream border border-taupe/40 px-4 py-2 text-charcoal">Predictive analytics</li>
+                <li class="small-body bg-cream border border-taupe/40 px-4 py-2 text-charcoal">Automation pipelines</li>
+                <li class="small-body bg-cream border border-taupe/40 px-4 py-2 text-charcoal">Conversion optimization</li>
+                <li class="small-body bg-cream border border-taupe/40 px-4 py-2 text-charcoal">LLM integration</li>
+                <li class="small-body bg-cream border border-taupe/40 px-4 py-2 text-charcoal">Performance reporting</li>
+              </ul>
+            </div>
+          </div>
+          <div class="service-item" role="listitem">
+            <button class="service-trigger w-full flex items-center justify-between py-6 md:py-8 text-left" aria-expanded="false">
+              <h2 class="h2 text-charcoal">Creative Intelligence</h2>
+              <svg class="service-icon size-4 text-orange shrink-0 ml-4" viewBox="0 0 11 11" fill="currentColor" aria-hidden="true"><path d="M10.87 5.9H6.51v4.35H5.06V5.9H.7V4.45H5.06V.09h1.45v4.36h4.36v1.45z"/></svg>
+            </button>
+            <div class="service-panel">
+              <p class="body-text text-grey pb-6 md:pb-8 max-w-lg">AI-augmented creative that amplifies human imagination without replacing it.</p>
+              <ul class="flex flex-wrap gap-2 pb-8">
+                <li class="small-body bg-cream border border-taupe/40 px-4 py-2 text-charcoal">Generative brand systems</li>
+                <li class="small-body bg-cream border border-taupe/40 px-4 py-2 text-charcoal">Motion &amp; 3D design</li>
+                <li class="small-body bg-cream border border-taupe/40 px-4 py-2 text-charcoal">Campaign concepts</li>
+                <li class="small-body bg-cream border border-taupe/40 px-4 py-2 text-charcoal">Content at scale</li>
+              </ul>
+            </div>
+          </div>
+          <div class="service-item" role="listitem">
+            <button class="service-trigger w-full flex items-center justify-between py-6 md:py-8 text-left" aria-expanded="false">
+              <h2 class="h2 text-charcoal">Digital Presence</h2>
+              <svg class="service-icon size-4 text-orange shrink-0 ml-4" viewBox="0 0 11 11" fill="currentColor" aria-hidden="true"><path d="M10.87 5.9H6.51v4.35H5.06V5.9H.7V4.45H5.06V.09h1.45v4.36h4.36v1.45z"/></svg>
+            </button>
+            <div class="service-panel">
+              <p class="body-text text-grey pb-6 md:pb-8 max-w-lg">Experiences that feel alive — intelligent interfaces that adapt to every visitor.</p>
+              <ul class="flex flex-wrap gap-2 pb-8">
+                <li class="small-body bg-cream border border-taupe/40 px-4 py-2 text-charcoal">AI-native web design</li>
+                <li class="small-body bg-cream border border-taupe/40 px-4 py-2 text-charcoal">Conversational UX</li>
+                <li class="small-body bg-cream border border-taupe/40 px-4 py-2 text-charcoal">Personalization engines</li>
+                <li class="small-body bg-cream border border-taupe/40 px-4 py-2 text-charcoal">Headless development</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="lg:w-72 shrink-0 flex items-center justify-center">
+          <div class="relative w-48 h-48 md:w-64 md:h-64">
+            <svg class="w-full h-full spin-slow text-orange" viewBox="0 0 200 200" fill="none" aria-hidden="true">
+              <circle cx="100" cy="100" r="90" stroke="currentColor" stroke-width="1" stroke-dasharray="4 8" opacity="0.3"/>
+              <path d="M100 20 L115 75 L170 75 L125 110 L140 170 L100 135 L60 170 L75 110 L30 75 L85 75 Z" fill="currentColor" opacity="0.15"/>
+              <path d="M100 50 L108 82 L140 82 L115 102 L123 135 L100 118 L77 135 L85 102 L60 82 L92 82 Z" fill="currentColor"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Band -->
+    <section class="bg-charcoal text-cream px-4 md:px-5 py-16 md:py-24" id="contact">
+      <div class="max-w-4xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+        <p class="h2 max-w-xl leading-tight">Ready when you are. Reach out and see what happens when the right minds — and models — connect.</p>
+        <a href="mailto:hello@synapse.ai" class="btn-primary shrink-0">Let's connect</a>
+      </div>
+    </section>
+
+    <!-- Featured Work -->
+    <section class="bg-blue text-cream px-4 md:px-5 py-16 md:py-24" id="work" aria-label="Featured work">
+      <p class="h3 mb-8 md:mb-12">Featured Work</p>
+      <div class="max-w-5xl mx-auto" role="list">
+        <button class="work-item w-full flex items-center justify-between py-6 md:py-8 text-left" role="listitem">
+          <h2 class="h2">Neural Commerce</h2>
+          <span class="small-body text-taupe hidden sm:block">E-commerce · AI Personalization</span>
+        </button>
+        <button class="work-item w-full flex items-center justify-between py-6 md:py-8 text-left" role="listitem">
+          <h2 class="h2">Lumina Health</h2>
+          <span class="small-body text-taupe hidden sm:block">Healthcare · Predictive Analytics</span>
+        </button>
+        <button class="work-item w-full flex items-center justify-between py-6 md:py-8 text-left" role="listitem">
+          <h2 class="h2">Vertex Finance</h2>
+          <span class="small-body text-taupe hidden sm:block">Fintech · LLM Integration</span>
+        </button>
+        <button class="work-item w-full flex items-center justify-between py-6 md:py-8 text-left" role="listitem">
+          <h2 class="h2">Aurora Media</h2>
+          <span class="small-body text-taupe hidden sm:block">Media · Generative Content</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Clients -->
+    <section class="py-16 md:py-24 overflow-hidden" aria-label="Our clients">
+      <div class="px-4 md:px-5 mb-8">
+        <p class="h3 text-charcoal mb-4">Our clients</p>
+        <p class="h2 text-charcoal max-w-lg">When the <span class="text-orange">c</span>onnection is real, it shows</p>
+      </div>
+      <div class="relative">
+        <div class="marquee-track" aria-hidden="true">
+          <div class="flex items-center gap-12 md:gap-20 px-6">
+            <span class="h2 text-taupe whitespace-nowrap opacity-60">OpenAI</span>
+            <span class="h2 text-taupe whitespace-nowrap opacity-60">Anthropic</span>
+            <span class="h2 text-taupe whitespace-nowrap opacity-60">Stripe</span>
+            <span class="h2 text-taupe whitespace-nowrap opacity-60">Figma</span>
+            <span class="h2 text-taupe whitespace-nowrap opacity-60">Notion</span>
+            <span class="h2 text-taupe whitespace-nowrap opacity-60">Linear</span>
+            <span class="h2 text-taupe whitespace-nowrap opacity-60">Vercel</span>
+            <span class="h2 text-taupe whitespace-nowrap opacity-60">Runway</span>
+          </div>
+          <div class="flex items-center gap-12 md:gap-20 px-6">
+            <span class="h2 text-taupe whitespace-nowrap opacity-60">OpenAI</span>
+            <span class="h2 text-taupe whitespace-nowrap opacity-60">Anthropic</span>
+            <span class="h2 text-taupe whitespace-nowrap opacity-60">Stripe</span>
+            <span class="h2 text-taupe whitespace-nowrap opacity-60">Figma</span>
+            <span class="h2 text-taupe whitespace-nowrap opacity-60">Notion</span>
+            <span class="h2 text-taupe whitespace-nowrap opacity-60">Linear</span>
+            <span class="h2 text-taupe whitespace-nowrap opacity-60">Vercel</span>
+            <span class="h2 text-taupe whitespace-nowrap opacity-60">Runway</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section class="px-4 md:px-5 py-16 md:py-32" id="about" aria-label="About us">
+      <p class="h3 text-charcoal mb-6">About us</p>
+      <h2 class="h1 text-charcoal mb-10 md:mb-16">Nice to <span class="text-orange">connect</span> with you</h2>
+      <p id="about-text" class="text-xl md:text-3xl lg:text-4xl leading-relaxed max-w-5xl font-medium">
+        We're thinkers, builders, and dreamers — prompt engineers (mostly all), data obsessed, curious by nature, strategic by choice. We explore, question, and connect until the answer fits. Every project is a journey, and we're here for the ride.
+      </p>
+      <a href="#contact" class="btn-secondary inline-block mt-10 md:mt-16">Connect more with us</a>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-12 md:mt-20">
+        <div class="relative overflow-hidden aspect-[4/5]">
+          <img src="https://placehold.co/400x500/FC5100/F4EFE9?text=Team+01" alt="" class="w-full h-full object-cover" loading="lazy">
+          <div class="absolute inset-0 bg-gradient-to-t from-charcoal/60 to-transparent mix-blend-multiply"></div>
+        </div>
+        <div class="relative overflow-hidden aspect-[4/5] sm:mt-8">
+          <img src="https://placehold.co/400x500/0501DE/F4EFE9?text=Team+02" alt="" class="w-full h-full object-cover" loading="lazy">
+          <div class="absolute inset-0 bg-gradient-to-t from-charcoal/60 to-transparent mix-blend-multiply"></div>
+        </div>
+        <div class="relative overflow-hidden aspect-[4/5]">
+          <img src="https://placehold.co/400x500/C0B6AC/1A1A1A?text=Team+03" alt="" class="w-full h-full object-cover" loading="lazy">
+          <div class="absolute inset-0 bg-gradient-to-t from-charcoal/60 to-transparent mix-blend-multiply"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Insights / Blog -->
+    <section class="px-4 md:px-5 py-16 md:py-24 bg-cream" id="insights" aria-label="Latest insights">
+      <p class="h3 text-charcoal mb-4">Latest insights</p>
+      <h2 class="h1 text-charcoal mb-10 md:mb-16 max-w-3xl">We create, but we also reflect. Explore what we've been thinking about lately.</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-6xl">
+        <a href="#" class="blog-card block bg-white overflow-hidden group">
+          <div class="overflow-hidden aspect-[16/10]">
+            <img src="https://placehold.co/600x375/FC5100/F4EFE9?text=AI+Social" alt="" class="w-full h-full object-cover" loading="lazy">
+          </div>
+          <div class="p-5 md:p-6">
+            <p class="small-body text-taupe mb-2">Insights · AI Strategy</p>
+            <h3 class="h4 text-charcoal group-hover:text-orange transition-colors duration-300">Generative vs. Traditional Creative: Stop Choosing Sides</h3>
+            <span class="small-body text-blue mt-4 inline-block font-semibold">Read insight →</span>
+          </div>
+        </a>
+        <a href="#" class="blog-card block bg-white overflow-hidden group">
+          <div class="overflow-hidden aspect-[16/10]">
+            <img src="https://placehold.co/600x375/0501DE/F4EFE9?text=AI+Marketing" alt="" class="w-full h-full object-cover" loading="lazy">
+          </div>
+          <div class="p-5 md:p-6">
+            <p class="small-body text-taupe mb-2">Insights · Marketing</p>
+            <h3 class="h4 text-charcoal group-hover:text-orange transition-colors duration-300">A decade of AI: the evolution of agencies and what comes next</h3>
+            <span class="small-body text-blue mt-4 inline-block font-semibold">Read insight →</span>
+          </div>
+        </a>
+        <a href="#" class="blog-card block bg-white overflow-hidden group">
+          <div class="overflow-hidden aspect-[16/10]">
+            <img src="https://placehold.co/600x375/C0B6AC/1A1A1A?text=Synapse" alt="" class="w-full h-full object-cover" loading="lazy">
+          </div>
+          <div class="p-5 md:p-6">
+            <p class="small-body text-taupe mb-2">Insights · Company</p>
+            <h3 class="h4 text-charcoal group-hover:text-orange transition-colors duration-300">Introducing Synapse — The Intelligence Behind Brand Evolution</h3>
+            <span class="small-body text-blue mt-4 inline-block font-semibold">Read insight →</span>
+          </div>
+        </a>
+      </div>
+      <a href="#" class="btn-secondary inline-block mt-10">See more</a>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-charcoal text-cream px-4 md:px-5 pt-16 md:pt-24 pb-8">
+    <div class="max-w-6xl mx-auto">
+      <div class="flex flex-col lg:flex-row justify-between gap-12 mb-16">
+        <div class="max-w-sm">
+          <img src="brand_assets/logo_white.svg" alt="" class="h-10 w-auto mb-6" width="44" height="50">
+          <h4 class="h4 mb-3">[sin-aps] noun · greek</h4>
+          <p class="body-text text-taupe leading-relaxed">The word <em>synapse</em> derives from the Greek <em>synapsis</em> meaning a "junction", "connection" or "link" where signals pass between neurons — the foundation of all intelligence.</p>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-12">
+          <ul class="space-y-3">
+            <li><a href="#about" class="small-body text-cream hover:text-orange transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange">About</a></li>
+            <li><a href="#insights" class="small-body text-cream hover:text-orange transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange">Insights</a></li>
+            <li><a href="#work" class="small-body text-cream hover:text-orange transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange">Work</a></li>
+            <li><a href="#contact" class="small-body text-cream hover:text-orange transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange">Contact</a></li>
+          </ul>
+          <a href="#contact" class="cta-blob-wrap relative inline-flex aspect-square min-h-24 min-w-24 items-center justify-center text-orange self-start">
+            <svg class="cta-blob absolute inset-0 w-full h-full" viewBox="0 0 125 125" fill="currentColor" aria-hidden="true">
+              <path d="M11.46 83.93C9.92 102.54 22.97 115.6 41.58 114.06 53.65 128.31 72.11 128.31 84.19 114.06 102.8 115.6 115.85 102.54 114.32 83.93 128.56 71.85 128.56 53.39 114.32 41.31 115.85 22.69 102.8 9.63 84.19 11.17 72.12-3.08 53.66-3.08 41.58 11.17 22.97 9.63 9.92 22.69 11.46 41.31-2.79 53.38-2.79 71.85 11.46 83.93z"/>
+            </svg>
+            <span class="h4 text-cream z-10 text-center px-3">Connect</span>
+          </a>
+        </div>
+      </div>
+      <div class="border-t border-cream/10 pt-8 flex flex-col md:flex-row justify-between gap-4">
+        <p class="small-body text-taupe">Designed with intelligence, 2026. All rights reserved by Synapse.</p>
+        <div class="flex gap-6">
+          <a href="#" class="small-body text-taupe hover:text-cream transition-colors duration-200">Terms</a>
+          <a href="#" class="small-body text-taupe hover:text-cream transition-colors duration-200">Privacy</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Loader
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const loader = document.getElementById('loader');
+        loader.style.opacity = '0';
+        loader.style.pointerEvents = 'none';
+        setTimeout(() => loader.remove(), 500);
+        if (!prefersReduced) initAnimations();
+      }, 800);
+    });
+
+    function initAnimations() {
+      // Nav reveal
+      gsap.from('#nav-links li', { opacity: 0, y: 20, duration: 0.6, stagger: 0.08, delay: 0.3, ease: 'power3.out' });
+
+      // Hero word split
+      const word = document.getElementById('hero-word');
+      const chars = word.textContent.split('');
+      word.innerHTML = chars.map(c => `<span class="inline-block opacity-0">${c}</span>`).join('');
+      gsap.to('#hero-word span', {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        stagger: 0.04,
+        delay: 0.5,
+        ease: 'power3.out',
+        from: { y: 40 }
+      });
+
+      // Manifesto scroll — curve text travels across, then body fades in
+      const manifestoTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: '#manifesto',
+          start: 'top top',
+          end: 'bottom bottom',
+          scrub: 1,
+        },
+      });
+
+      manifestoTl
+        .fromTo('#curve-text',
+          { attr: { startOffset: '-5%' } },
+          { attr: { startOffset: '110%' }, ease: 'none', duration: 0.48 },
+          0
+        )
+        .to('#curve-wrap', { opacity: 0, ease: 'none', duration: 0.08 }, 0.44)
+        .fromTo('#manifesto-body',
+          { opacity: 0, y: 48 },
+          { opacity: 1, y: 0, ease: 'power2.out', duration: 0.16 },
+          0.58
+        );
+
+      // Services reveal
+      gsap.to('#services-wrap', {
+        scrollTrigger: { trigger: '#services', start: 'top 80%' },
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power3.out',
+        from: { y: 40 }
+      });
+
+      // About word highlight
+      const aboutEl = document.getElementById('about-text');
+      const words = aboutEl.textContent.trim().split(/\s+/);
+      aboutEl.innerHTML = words.map(w => `<span class="about-word">${w}</span> `).join('');
+
+      const aboutWords = aboutEl.querySelectorAll('.about-word');
+      aboutWords.forEach((w, i) => {
+        ScrollTrigger.create({
+          trigger: w,
+          start: 'top 85%',
+          end: 'top 50%',
+          onEnter: () => w.classList.add('active'),
+          onLeaveBack: () => w.classList.remove('active'),
+        });
+      });
+
+      // Work items stagger
+      gsap.from('.work-item', {
+        scrollTrigger: { trigger: '#work', start: 'top 75%' },
+        opacity: 0,
+        x: -30,
+        duration: 0.6,
+        stagger: 0.1,
+        ease: 'power3.out'
+      });
+
+      // Blog cards
+      gsap.from('.blog-card', {
+        scrollTrigger: { trigger: '#insights', start: 'top 75%' },
+        opacity: 0,
+        y: 40,
+        duration: 0.7,
+        stagger: 0.15,
+        ease: 'power3.out'
+      });
+    }
+
+    // Service accordion
+    document.querySelectorAll('.service-item').forEach(item => {
+      const btn = item.querySelector('.service-trigger');
+      btn.addEventListener('click', () => {
+        const wasOpen = item.classList.contains('open');
+        document.querySelectorAll('.service-item').forEach(i => {
+          i.classList.remove('open');
+          i.querySelector('.service-trigger').setAttribute('aria-expanded', 'false');
+        });
+        if (!wasOpen) {
+          item.classList.add('open');
+          btn.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+
+    // Mobile menu
+    const mobileMenu = document.getElementById('mobile-menu');
+    const openMenu = () => { mobileMenu.classList.add('open'); document.body.style.overflow = 'hidden'; };
+    const closeMenu = () => { mobileMenu.classList.remove('open'); document.body.style.overflow = ''; };
+    document.getElementById('mobile-menu-btn').addEventListener('click', openMenu);
+    document.getElementById('mobile-menu-close').addEventListener('click', closeMenu);
+    document.querySelectorAll('.mobile-nav-link').forEach(l => l.addEventListener('click', closeMenu));
+
+    // DottedSurface — ported from shadcn dotted-surface component
+    if (!prefersReduced && typeof THREE !== 'undefined') {
+      const container = document.getElementById('dotted-surface');
+      const hero = document.getElementById('hero');
+      const isMobile = window.innerWidth < 768;
+      const SEPARATION = isMobile ? 120 : 150;
+      const AMOUNTX = isMobile ? 28 : 40;
+      const AMOUNTY = isMobile ? 40 : 60;
+
+      const scene = new THREE.Scene();
+      scene.fog = new THREE.Fog(0xfc5100, 2000, 10000);
+
+      const camera = new THREE.PerspectiveCamera(60, 1, 1, 10000);
+      camera.position.set(0, 355, 1220);
+
+      const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setClearColor(scene.fog.color, 0);
+      container.appendChild(renderer.domElement);
+
+      const positions = [];
+      const colors = [];
+      for (let ix = 0; ix < AMOUNTX; ix++) {
+        for (let iy = 0; iy < AMOUNTY; iy++) {
+          positions.push(
+            ix * SEPARATION - (AMOUNTX * SEPARATION) / 2,
+            0,
+            iy * SEPARATION - (AMOUNTY * SEPARATION) / 2
+          );
+          colors.push(5 / 255, 1 / 255, 222 / 255);
+        }
+      }
+
+      const geometry = new THREE.BufferGeometry();
+      geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+      geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+
+      const material = new THREE.PointsMaterial({
+        size: isMobile ? 6 : 8,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.75,
+        sizeAttenuation: true,
+      });
+
+      const points = new THREE.Points(geometry, material);
+      scene.add(points);
+
+      let count = 0;
+      let animationId;
+
+      function resize() {
+        const w = hero.clientWidth;
+        const h = hero.clientHeight;
+        renderer.setSize(w, h);
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+      }
+
+      function animate() {
+        animationId = requestAnimationFrame(animate);
+        const posArr = geometry.attributes.position.array;
+        let i = 0;
+        for (let ix = 0; ix < AMOUNTX; ix++) {
+          for (let iy = 0; iy < AMOUNTY; iy++) {
+            const idx = i * 3;
+            posArr[idx + 1] =
+              Math.sin((ix + count) * 0.3) * 50 +
+              Math.sin((iy + count) * 0.5) * 50;
+            i++;
+          }
+        }
+        geometry.attributes.position.needsUpdate = true;
+        renderer.render(scene, camera);
+        count += 0.1;
+      }
+
+      resize();
+      window.addEventListener('resize', resize);
+      animate();
+
+      window.addEventListener('beforeunload', () => {
+        cancelAnimationFrame(animationId);
+        geometry.dispose();
+        material.dispose();
+        renderer.dispose();
+        if (renderer.domElement.parentNode) {
+          renderer.domElement.parentNode.removeChild(renderer.domElement);
+        }
+      });
+    }
+  </script>
+</body>
+</html>
