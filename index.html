@@ -12,6 +12,7 @@
             colors: {
               cream: "#F4EFE9",
               orange: "#FC5100",
+              "light-green": "#B8E6B0",
               blue: "#0501DE",
               taupe: "#C0B6AC",
               charcoal: "#1A1A1A",
@@ -382,7 +383,7 @@
 
     <main>
       <!-- Hero -->
-      <section class="relative bg-orange text-cream min-h-svh flex flex-col overflow-hidden" id="hero">
+      <section class="relative bg-light-green text-cream min-h-svh flex flex-col overflow-hidden" id="hero">
         <div id="dotted-surface" aria-hidden="true"></div>
 
         <header class="relative z-10 shrink-0">
@@ -1051,7 +1052,7 @@
         const AMOUNTY = isMobile ? 40 : 60;
 
         const scene = new THREE.Scene();
-        scene.fog = new THREE.Fog(0xfc5100, 2000, 10000);
+        scene.fog = new THREE.Fog(0xb8e6b0, 2000, 10000);
 
         const camera = new THREE.PerspectiveCamera(60, 1, 1, 10000);
         camera.position.set(0, 355, 1220);
